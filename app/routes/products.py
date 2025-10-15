@@ -19,13 +19,13 @@ def list_products(page: int = 1, limit: int = 10, session: Session = Depends(get
 def search_products(
     brand: Optional[str] = Query(None),
     color: Optional[str] = Query(None),
-    # minPrice: Optional[float] = Query(None),
+    minPrice: Optional[float] = Query(None),
     maxPrice: Optional[float] = Query(None),
-    page: int = 1,
-    limit: int = 10,
+    # page: int = 1,
+    # limit: int = 10,
     session: Session = Depends(get_session)
 ):
-    query = select(Product)
+    query = select(Product).distinct(Product.sku)
 
     if brand:
         query = query.where(Product.brand == brand)
@@ -36,8 +36,8 @@ def search_products(
     if maxPrice:
         query = query.where(Product.price <= maxPrice)
 
-    offset = (page - 1) * limit
-    query = query.offset(offset).limit(limit)
+    # offset = (page - 1) * limit
+    # query = query.offset(offset).limit(limit)
 
     products = session.exec(query).all()
     return products

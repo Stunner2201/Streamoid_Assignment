@@ -1,6 +1,6 @@
 # app/routes/upload.py
 from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
-from sqlmodel import Session
+from sqlmodel import Session, select
 from app.database import get_session
 from app.models import Product
 from app.utils.validators import validate_row
@@ -9,12 +9,18 @@ import os, uuid
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
 
+# Directories
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/")
 async def upload_csv(file: UploadFile = File(...), session: Session = Depends(get_session)):
+    # ✅ Delete all old products first
+    session.query(Product).delete()
+    session.commit()
+
+    # Save uploaded file
     contents = await file.read()
     filename = f"{uuid.uuid4().hex}_{file.filename}"
     path = os.path.join(UPLOAD_DIR, filename)
@@ -22,6 +28,7 @@ async def upload_csv(file: UploadFile = File(...), session: Session = Depends(ge
     with open(path, "wb") as f:
         f.write(contents)
 
+    # Read CSV
     try:
         df = pd.read_csv(path)
     except Exception as e:
@@ -55,4 +62,9 @@ async def upload_csv(file: UploadFile = File(...), session: Session = Depends(ge
         stored += 1
 
     session.commit()
-    return {"stored": stored, "failed": failed, "saved_file": filename}
+
+    return {
+        "stored": stored,
+        "failed": failed,
+        "saved_file": filename
+    }
