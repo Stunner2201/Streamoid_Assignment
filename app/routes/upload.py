@@ -16,7 +16,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/")
 async def upload_csv(file: UploadFile = File(...), session: Session = Depends(get_session)):
-    # ✅ Delete all old products first
+    #  Delete all old products first
     session.query(Product).delete()
     session.commit()
 

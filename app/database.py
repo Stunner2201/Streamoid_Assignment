@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Get DB URL (default to SQLite)
+# Get DB URL (SQLite)
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
 
 # Create engine

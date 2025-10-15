@@ -11,7 +11,7 @@ app = FastAPI(title="Streamoid Backend API")
 # Create tables
 create_db_and_tables()
 
-# Include routers
+# routers
 app.include_router(upload_router)
 app.include_router(products_router)
 
