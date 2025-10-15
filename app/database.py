@@ -5,8 +5,11 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Get DB URL (SQLite)
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./test.db")
+# ✅ Store DB file inside /app/data (the mounted writable volume)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///data/test.db")
+
+# ✅ Ensure /app/data exists
+os.makedirs("data", exist_ok=True)
 
 # Create engine
 engine = create_engine(DATABASE_URL, echo=True)
