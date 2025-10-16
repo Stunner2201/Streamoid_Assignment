@@ -66,5 +66,20 @@ docker-compose up
 ```bash
 http://127.0.0.1:8000/docs
 ```
+### 5. Testing the Application
+#### 1. You’ll see all available endpoints:
+```bash
+- /upload-csv/ → Upload product CSV file
+- /products/ → List all products
+- /products/search/ → Search products
+```
+
+#### 2. Click on the “Try it out” button for any endpoint you want to test.
+```bash
+- For Upload CSV, click Try it out → Choose File → Execute.
+- For List Products or Search Products, click Try it out → Enter parameters → Execute.
+- You’ll see the response (JSON) and status code directly below the request box.
+```
+
 
 
